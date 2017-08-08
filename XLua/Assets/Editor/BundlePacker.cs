@@ -13,7 +13,7 @@ public class BundlePacker : Editor
   public static void BuildBundle()
   {
     HandleLuaCode();
-    // BuildPipeline.BuildAssetBundles("Assets/StreamingAssets", BuildAssetBundleOptions.ChunkBasedCompression, BuildTarget.Android);
+    BuildPipeline.BuildAssetBundles("Assets/StreamingAssets", BuildAssetBundleOptions.ChunkBasedCompression, BuildTarget.Android);
   }
   static void HandleLuaCode()
   {
@@ -23,21 +23,19 @@ public class BundlePacker : Editor
     if (Directory.Exists(luaBundlePath)) Directory.Delete(luaBundlePath,true);
     if (Directory.Exists(streamPath)) Directory.Delete(streamPath,true);
     Directory.CreateDirectory(streamPath);
-    // dirsList.Clear(); filesList.Clear();
-    // GetChildFile(luaDir);
-    // foreach (string dir in dirsList)
-    // {
-    //   string streamDir = dir.Replace(luaDir, luaBundlePath);
-    //   File.Copy(dir,streamDir, true);
-    // }
-    // foreach (string file in filesList)
-    // {
-    //   string streamFile = file.Replace(luaDir, "");
-    //   File.Copy(file, streamFile, true);
-    // }
+    dirsList.Clear(); filesList.Clear();
+    GetDirAllFile(luaDir);
+    foreach(string file in filesList){
+      if(Path.GetExtension(file).Equals(".meta")) continue;
+      string name =  file.Replace(Application.dataPath,"");
+      string newPath =  streamPath+ name;
+      string dir = Path.GetDirectoryName(newPath);
+      if(!Directory.Exists(dir)) Directory.CreateDirectory(dir);
+      File.Copy(file,newPath);
+    }
   }
   //处理子类文件
-  static void GetChildFile(string dirPath)
+  static void GetDirAllFile(string dirPath)
   {
     string[] dirs = Directory.GetDirectories(dirPath);
     string[] files = Directory.GetFiles(dirPath);
@@ -49,7 +47,7 @@ public class BundlePacker : Editor
     foreach (string dir in dirs)
     {
       dirsList.Add(dir.Replace('\\', '/'));
-      GetChildFile(dir);
+      GetDirAllFile(dir);
     }
   }
 }

@@ -1,0 +1,11 @@
+ManifestFileVersion: 0
+CRC: 828545369
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: pic_bundle
+      Dependencies: {}
+    Info_1:
+      Name: pre1.ab
+      Dependencies:
+        Dependency_0: pic_bundle
